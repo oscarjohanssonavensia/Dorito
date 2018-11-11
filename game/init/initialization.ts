@@ -10,6 +10,9 @@ import Asteroid from "../models/Asteroid";
 import { SHIP_LENGTH_RADIUS, SHIP_WIDTH_RADIUS, FORCE_FIELD_RESOLUTION } from '../engine/Consts';
 import { Particle } from '../models/Particle';
 import { getGuid } from '../engine/math/Collision';
+import Text from "../gui/text/CreateText";
+import Clear from "../gui/objects/Clear";
+import { ClearHard } from '../gui/objects/Clear';
 
 
 
@@ -102,7 +105,7 @@ export const createEnemies = () => {
 }
 
 
-export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: number = __wh) => {
+export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: number = __wh, drawFirstState: boolean = false) => {
 
 
     console.log(SW, SH);
@@ -111,8 +114,11 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
     canvas.width = SW;
     canvas.height = SH;
     const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, SW, SH);
+    const imgData = ctx.getImageData(0, 0, SW, SH);
 
-    const imgData: ImageData = new ImageData(SW, SH);
+
     game.starMap = [];
     game.particles = [];
     game.asteroids = [];
@@ -185,7 +191,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
         y: SH * 0.5,
         damageTaken: false,
         angle: 0,
-        pos: new Vector(SW * 0.5, SH * 0.5),
+        pos: new Vector(SW * 0.9, SH * 0.9),
         thrust: new Vector(0, 0),
         vel: new Vector(0, 0),
         layout: [
@@ -272,13 +278,28 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
         keyCodes,
     };
 
-    EngineInit(engineContext);
-
-
     setTimeout(() => {
-        Gui(guiContext); // draw current state once
-    }, 0);
+        EngineInit(engineContext);
 
+
+
+        setTimeout(() => {
+            Gui(guiContext); // draw current state once to initialize all textbuffering 
+
+            setTimeout(() => {
+
+                ClearHard(guiContext);
+
+                setTimeout(() => {
+
+                    const loadingBuffer = Text.create('Loading... DORITO |>', 100, 'r');
+                    Text.add(SW, imgData.data, loadingBuffer, 200, 200);
+                    ctx.putImageData(imgData, 0, 0);
+                }, 0)
+            }, 0)
+
+        }, 0);
+    }, 0);
     return game;
 
 
@@ -341,6 +362,7 @@ export const start = (_gui?: Function, _engine?: Function, SW: number = __sw, SH
 
         requestAnimationFrame(loop);
     }
-    loop();
+    setTimeout(() => loop(), 2500);
+
 
 }

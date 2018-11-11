@@ -5,7 +5,7 @@ interface GameUpdater {
     (ctx: GuiContext | EngineContext): void;
 }
 
-export default (updater: GameUpdater, ctx: GuiContext | EngineContext, engine: boolean) => {
+export default (updater: GameUpdater, ctx: GuiContext | EngineContext, engine: boolean): number => {
 
     const t = performance.now();
     updater(ctx);
@@ -16,6 +16,7 @@ export default (updater: GameUpdater, ctx: GuiContext | EngineContext, engine: b
     } else {
         ctx.game.performance.gui.push(res);
     }
+    return res;
 }
 
 export const MeasureTimeFn = (fn: Function, targetList?: number[]): number => {

@@ -38,3 +38,15 @@ export default (guiContext: GuiContext) => {
         lineSkip = LINE_SKIP_MAX;
     }
 }
+
+export const ClearHard = (guiContext: GuiContext) => {
+    const { frame, SW, SH } = guiContext;
+    const len = SW * SH * 4;
+    const step = 4;
+    for (var i = 0; i < len; i += step) {
+        frame[i] = 0;
+        frame[i + 1] = 0;
+        frame[i + 2] = 0;
+        frame[i + 3] = 255;
+    }
+}
