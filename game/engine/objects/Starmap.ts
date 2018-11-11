@@ -1,10 +1,10 @@
-import Game, { Star } from '../../models/Game';
+import { Star } from '../../models/Game';
 import { EngineContext } from '../Game';
 
 
 export const init = (ctx: EngineContext) => {
 
-    const { game, WW, WH, SW, SH } = ctx;
+    const { game, SW, SH } = ctx;
 
     for (let i = 0; i < SH * 2; i++) {
 
@@ -24,7 +24,7 @@ export const resize = (ctx: EngineContext) => {
 let time = 0;
 
 export default (ctx: EngineContext) => {
-    const { game, WW, step, SW } = ctx;
+    const { game, step, SW } = ctx;
 
 
     if (time > step * 5) {
