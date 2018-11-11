@@ -281,6 +281,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
 
     return game;
 
+
 }
 export const start = (_gui?: Function, _engine?: Function, SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: number = __wh) => {
 
@@ -289,21 +290,26 @@ export const start = (_gui?: Function, _engine?: Function, SW: number = __sw, SH
 
     const FPS = 1000 / 60;
     let ticks = 0;
-    let t = new Date().getTime();
+    let t = performance.now();
     let tt = t;
     let step = 0;
 
     const gui = _gui || Gui;
     const engine = _engine || Engine;
 
-    setInterval(() => {
+    const loop = () => {
+
+
+
+
+
 
 
         // TIME
 
         ticks++;
         t = tt;
-        tt = new Date().getTime();
+        tt = performance.now();
         step = tt - t;
         const stepM = step * 0.1;
 
@@ -324,14 +330,17 @@ export const start = (_gui?: Function, _engine?: Function, SW: number = __sw, SH
         engine(engineContext);
 
 
-        const engineTime = new Date().getTime() - tt;
+        const engineTime = performance.now() - tt;
         gui(guiContext);
-        const guiTime = new Date().getTime() - (tt + engineTime);
+        const guiTime = performance.now() - (tt + engineTime);
 
         stats(guiContext, engineTime, guiTime);
 
         //console.log(step, game.particles.length);
 
-    }, FPS);
+
+        requestAnimationFrame(loop);
+    }
+    loop();
 
 }

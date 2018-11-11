@@ -2,7 +2,7 @@ import { GuiContext } from "../Game";
 import { distort } from "../Buffer";
 import Text from '../text/CreateText';
 
-const GAME_OVER_BUFFERED_TEXT = Text.create('GAME OVER', 150, 830, 140, 'r');
+const GAME_OVER_BUFFERED_TEXT = Text.create('GAME OVER', 150, 'r');
 
 
 export default (guictx: GuiContext) => {

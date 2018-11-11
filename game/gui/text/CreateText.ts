@@ -7,7 +7,7 @@ export type TextBuffer = {
     w: number;
     h: number;
     length: number;
-    debugBgColor: string;
+
 
 }
 
@@ -15,26 +15,12 @@ export default class Text {
 
     private static buffer = {};
 
-    //private static CANVAS = document.createElement('canvas');
 
-    private static createOffscreenCanvas(w: number, h: number, debugBgColor: string = null) {
-        let offScreenCanvas = document.createElement('canvas');
-        offScreenCanvas.width = w;
-        offScreenCanvas.height = h;
-        const ctx = offScreenCanvas.getContext("2d");
-        if (debugBgColor) {
-            ctx.fillStyle = debugBgColor;
-            ctx.fillRect(0, 0, w, h);
-        }
-        return ctx;
-    }
+    public static create(str: string, size: number, color: color, debugBoundingBox: boolean = false): TextBuffer {
 
-    public static create(str: string, size: number, w: number, h: number, color: color, debugBgColor: string = null): TextBuffer {
 
-        const SAFE_W = Math.floor(w);
-        const SAFE_H = Math.floor(h);
 
-        const cacheKey = str + '_' + size + '_' + SAFE_W + SAFE_H + color + debugBgColor;
+        const cacheKey = str + '_' + size + '_' + '-' + color + '__' + (debugBoundingBox ? 'bb' : '_');
 
         const cached = this.buffer[cacheKey];
 
@@ -61,23 +47,44 @@ export default class Text {
                 break;
         }
 
-        const ctx = this.createOffscreenCanvas(SAFE_W, SAFE_H, debugBgColor);
+        const canvas = document.createElement('canvas');
+        canvas.height = size;
+        let ctx = canvas.getContext('2d');
+
+        const rgbaColor = 'rgba(' + r + ',' + g + ',' + b + ',255)';
 
         ctx.font = size + "px monospace";
-        ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',255)';
+        ctx.fillStyle = rgbaColor;
+        const measurements = ctx.measureText(str);
+        canvas.width = measurements.width;
+
+        ctx = canvas.getContext('2d');
+        if (debugBoundingBox) {
+            ctx.fillStyle = rgbaColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'black';
+            ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
+        }
+
+
+        ctx.font = size + "px monospace";
+        ctx.fillStyle = rgbaColor;
+
+
         ctx.fillText(str, 0, size * 0.8);
 
 
-        const imgData = ctx.getImageData(0, 0, w, h);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
 
         const buffer: TextBuffer = {
             frame: imgData.data,
             rgbIndex,
-            w: SAFE_W,
-            h: SAFE_H,
+            w: canvas.width,
+            h: canvas.height,
             length: imgData.data.length,
-            debugBgColor,
+
         }
 
         this.buffer[cacheKey] = buffer;
@@ -133,39 +140,24 @@ export default class Text {
 
         let lineIndex = 0;
 
-        if (textBuffer.debugBgColor) {
-            for (var i = begin; i < len; i += 4) {
 
-                const ix = Math.floor(y + destIndex) * SW * 4 + Math.floor(x + lineIndex) * 4;
-                frame[ix + 0] = src[i + 0];
-                frame[ix + 1] = src[i + 1];
-                frame[ix + 2] = src[i + 2];
-                frame[ix + 3] = src[i + 3];
+        for (var i = begin; i < len; i += 4) {
 
-                if (lineIndex >= SRCW) {
-                    destIndex++;
-                    lineIndex = 0;
+            const xpos = Math.floor(x + lineIndex);
+            if (xpos < SW && xpos > 0) {
+                const ix = Math.floor(y + destIndex) * SW * 4 + xpos * 4;
+                const srcColor = src[i + rgbIndex];
+                if (srcColor) {
+                    frame[ix + rgbIndex] = srcColor;
                 }
-                lineIndex++;
             }
-        } else {
-            for (var i = begin; i < len; i += 4) {
-
-                const xpos = Math.floor(x + lineIndex);
-                if (xpos < SW && xpos > 0) {
-                    const ix = Math.floor(y + destIndex) * SW * 4 + xpos * 4;
-                    const srcColor = src[i + rgbIndex];
-                    if (srcColor) {
-                        frame[ix + rgbIndex] = srcColor;
-                    }
-                }
-                if (lineIndex >= SRCW) {
-                    destIndex++;
-                    lineIndex = 0;
-                }
-                lineIndex++;
+            if (lineIndex >= SRCW) {
+                destIndex++;
+                lineIndex = 0;
             }
+            lineIndex++;
         }
+
 
     }
 

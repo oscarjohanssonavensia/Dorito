@@ -6,9 +6,9 @@ import { TextBuffer } from '../text/CreateText';
 let radiusOut = 200;
 let radiusIn = 400;
 
-const BLACK_HOLE_TEXT_BUFFER = Text.create('BLACK_HOLE', 80, 600, 80, 'r');
-const WHITE_HOLE_TEXT_BUFFER = Text.create('WHITE_HOLE', 80, 600, 80, 'r');
-const ANOMALY_TEXT_BUFFER = Text.create('ANOMALY', 80, 600, 80, 'r');
+const BLACK_HOLE_TEXT_BUFFER = Text.create('BLACK_HOLE', 80, 'r');
+const WHITE_HOLE_TEXT_BUFFER = Text.create('WHITE_HOLE', 80, 'r');
+const ANOMALY_TEXT_BUFFER = Text.create('ANOMALY', 80, 'r');
 
 
 const drawTexts = (text: TextBuffer, x: number, y: number, guictx: GuiContext) => {

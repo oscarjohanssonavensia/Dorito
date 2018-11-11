@@ -59,7 +59,7 @@ export default (guictx: GuiContext) => {
                     line2(SW, xpos - size - SX, ypos - SY, xpos + size - SX, ypos - SY, 255, 0, 0, 255, frame);
                     line2(SW, xpos - SX, ypos - size - SY, xpos - SX, ypos + size - SY, 255, 0, 0, 255, frame);
 
-                    const sectorIdBuffer = Text.create('Y:' + y + ' X:' + x, 15, 140, 15, 'r');
+                    const sectorIdBuffer = Text.create('Y:' + y + ' X:' + x, 15, 'r');
                     Text.add(SW, frame, sectorIdBuffer, 10 + xpos - SX, 10 + ypos - SY);
 
                     for (let i = 0; i < numGrids; i++) {
@@ -67,7 +67,7 @@ export default (guictx: GuiContext) => {
                         if (grid && grid[y] && grid[y][x]) {
                             const sectorsSize = grid[y][x].length;
                             if (sectorsSize) {
-                                const tBuffer = Text.create(gridsType[i] + sectorsSize, 30, 100, 30, 'r');
+                                const tBuffer = Text.create(gridsType[i] + sectorsSize, 30, 'r');
                                 Text.add(SW, frame, tBuffer, 10 + xpos - SX, 10 + ypos - SY + (i + 1) * 30);
                             }
                         }

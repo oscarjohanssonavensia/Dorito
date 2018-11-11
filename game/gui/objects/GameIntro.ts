@@ -2,12 +2,12 @@ import { GuiContext } from "../Game";
 import Text from '../text/CreateText';
 import { GAME_INTRO_TIMER } from '../../engine/Consts';
 
-const GET_BUFFERED_TEXT = Text.create('GET', 150, 280, 140, 'r');
-const READY_BUFFERED_TEXT = Text.create('READY', 150, 410, 140, 'r');
+const GET_BUFFERED_TEXT = Text.create('GET', 150, 'r');
+const READY_BUFFERED_TEXT = Text.create('READY', 150, 'r');
 
-const BUFFERED_TEXT_1 = Text.create('1', 450, 240, 400, 'r');
-const BUFFERED_TEXT_2 = Text.create('2', 450, 240, 400, 'r');
-const BUFFERED_TEXT_3 = Text.create('3', 450, 240, 400, 'r');
+const BUFFERED_TEXT_1 = Text.create('1', 450, 'r');
+const BUFFERED_TEXT_2 = Text.create('2', 450, 'r');
+const BUFFERED_TEXT_3 = Text.create('3', 450, 'r');
 let initGame = GAME_INTRO_TIMER;
 
 export default (guictx: GuiContext) => {
