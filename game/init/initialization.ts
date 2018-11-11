@@ -291,8 +291,11 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
                 ClearHard(guiContext);
 
                 setTimeout(() => {
-
-                    const loadingBuffer = Text.create('Loading... DORITO |>', 100, 'r');
+                    let str = 'Loading... DORITO |>'
+                    if (game.testMode) {
+                        str += '@test';
+                    }
+                    const loadingBuffer = Text.create(str, 100, 'r');
                     Text.add(SW, imgData.data, loadingBuffer, 200, 200);
                     ctx.putImageData(imgData, 0, 0);
                 }, 0)
@@ -362,7 +365,9 @@ export const start = (_gui?: Function, _engine?: Function, SW: number = __sw, SH
 
         requestAnimationFrame(loop);
     }
-    setTimeout(() => loop(), 2500);
+
+
+    setTimeout(() => loop(), game.testMode ? 500 : 2500);
 
 
 }

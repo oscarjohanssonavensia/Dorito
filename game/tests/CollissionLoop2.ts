@@ -192,7 +192,8 @@ export default class Startup {
         const WORLD_MULTIP = 1;
 
         const game = initialization(SW, SH, SW * WORLD_MULTIP, SH * WORLD_MULTIP);
-
+        game.player.pos.x = SW * 0.5;
+        game.player.pos.y = SH * 0.5;
         game.testMode = true;
 
         for (let i = 0; i < 180; i++) {

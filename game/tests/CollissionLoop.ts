@@ -6,6 +6,9 @@ export default class Startup {
 
         const game = initialization();
         game.testMode = true;
+        game.player.pos.x = SW * 0.5;
+        game.player.pos.y = SH * 0.5;
+
 
         createAsteroid(SW * 0.5, SH * 0.8, 0, 0, 30);
         createAsteroid(SW * 0.5, SH * 0.8, 0, 0, 30);

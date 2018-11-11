@@ -18,27 +18,27 @@ export const bounce = (item: Imovable, WW: number, WH: number) => {
 
 
     const bounceFriction = -0.5;
-    const correction = item.radius;
+    const correction = item.radius + 1;
     const floorOffset = 0;
     let bounced = false;
 
-    if (item.pos.x + correction >= WW) {
+    if (item.pos.x >= WW) {
         item.pos.x = WW - correction;
         item.vel.x *= bounceFriction
         bounced = true;
-    } else if (item.pos.x - correction <= 0) {
+    } else if (item.pos.x <= 0) {
         item.pos.x = correction;
         item.vel.x *= bounceFriction;
         bounced = true;
     }
 
-    if (item.pos.y + correction + floorOffset >= WH) {
+    if (item.pos.y + floorOffset >= WH) {
         item.pos.y = WH - (correction + floorOffset);
         item.vel.y *= bounceFriction;
         item.vel.x *= -bounceFriction;
         bounced = true;
 
-    } else if (item.pos.y - correction <= 0) {
+    } else if (item.pos.y <= 0) {
         item.pos.y = correction;
         item.vel.y *= bounceFriction;
         bounced = true;
