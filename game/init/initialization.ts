@@ -133,7 +133,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
 
     window['game'] = game;
 
-    console.log('YOLO')
+    console.log('gitted')
 
 
 
