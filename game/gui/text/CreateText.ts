@@ -92,7 +92,7 @@ export default class Text {
         return buffer;
     }
 
-    public static addList(SW: number, frame: Uint8ClampedArray, textBuffers: TextBuffer[], x: number, y: number, distort: boolean = true) {
+    public static addList(SW: number, frame: Uint8ClampedArray, textBuffers: TextBuffer[], x: number, y: number, distort: boolean = false) {
         const numBuffers = textBuffers.length;
         let currentX = x;
 
