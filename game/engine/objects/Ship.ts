@@ -71,6 +71,7 @@ export default (ctx: EngineContext) => {
             const vel = new Vector(0, 0);
             vel.setLength(4 - ship.vel.getLength());
             vel.setAngle(ship.angle + 3.06 + (Math.random() - 0.5) * 0.2);
+            vel.mult(Math.random());
 
             const tp: Particle = {
 
