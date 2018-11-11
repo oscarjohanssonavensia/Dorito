@@ -36,6 +36,8 @@ const drawShipTriangle = (layout: Vector[], pos: Vector, SW: number, SX: number,
 
 }
 
+let shieldAngle = Number.MIN_VALUE;
+
 export default (guiContext: GuiContext) => {
 
     const { game, SX, SY, frame, SW, SH } = guiContext
@@ -102,6 +104,15 @@ export default (guiContext: GuiContext) => {
 
     // SHIELDS
     if (player.shields > 0) {
-        blockCircleRGBA(8, player.radius * 4, player.pos.x, player.pos.y, -player.angle, frame, 255, 0, 255, 255, SW, SH, SX, SY, 1);
+        shieldAngle += 0.01;
+        let radiusMulip = 1;
+        if (player.shields < 80) {
+            shieldAngle += 0.1;
+            radiusMulip = Math.random() * 0.15 + 0.85;
+        }
+        if (player.shields < 5) {
+            radiusMulip = Math.random() * 0.2 + 0.6;
+        }
+        blockCircleRGBA(8, player.radius * 4 * radiusMulip, player.pos.x, player.pos.y, -player.angle + shieldAngle, frame, 255, 0, 255, 255, SW, SH, SX, SY, 1);
     }
 }
