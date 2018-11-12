@@ -5,7 +5,8 @@ import { coarse, getGuid } from '../../../math/Collision';
 import { explosion } from '../../../Create';
 import { Vector } from '../../../math/vector';
 import Asteroid from '../../../../models/Asteroid';
-import { removeAsteroid } from '../../../../gui/objects/Asteroids';
+import { removeAsteroid } from '../../Asteroid';
+
 
 
 const asteroidToBulletHandler: CollisionHandler = (bullet: Imovable, asteroid: Imovable, ctx: EngineContext) => {

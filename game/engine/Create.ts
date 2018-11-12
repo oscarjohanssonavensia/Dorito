@@ -81,7 +81,7 @@ export const forces = (forceField: Vector[][], posx: number, posy: number, size:
     //forceField[fy][fx].setLength(100);
 }
 
-export const explosion = (forceField: Vector[][], amount: number, x: number, y: number, list: Particle[], velx: number = 0, vely: number = 0, fieldValue: number = 6) => {
+export const explosion = (forceField: Vector[][], amount: number, x: number, y: number, list: Particle[], velx: number = 0, vely: number = 0, fieldValue: number = 12) => {
 
     if (amount > 10) {
         forces(forceField, x, y, fieldValue, false, true);

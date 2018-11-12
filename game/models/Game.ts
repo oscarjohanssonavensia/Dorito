@@ -3,6 +3,7 @@ import { Ship } from './Ship';
 import Asteroid from "./Asteroid";
 import { Vector } from "../engine/math/vector";
 import { CustomParticle } from './CustomParticle';
+import AsteroidPart from './AsteroidPart';
 
 export type Star = {
     x: number;
@@ -32,4 +33,5 @@ export default class Game {
     };
     public testMode: boolean;
     public debug?: any;
+    public asteroidParts: AsteroidPart[] = [];
 }

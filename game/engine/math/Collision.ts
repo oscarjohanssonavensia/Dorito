@@ -76,6 +76,11 @@ export const distanceBetween = (a: Imovable, b: Imovable): number => {
 
 }
 
+export const midpoint = (a: Vector, b: Vector, multip: number = 0.5) => {
+
+    return new Vector(a.x + (b.x - a.x) * multip, a.y + (b.y - a.y) * multip);
+}
+
 export const distanceBetweenXYXY = (ax: number, ay: number, bx: number, by: number) => {
     const w = ax - bx;
     const h = ay - by;

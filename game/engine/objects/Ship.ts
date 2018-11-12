@@ -13,7 +13,7 @@ import Charge from '../../models/Charge';
 import Imovable from '../../models/IMovable';
 import { Ship, ProximityVectors } from '../../models/Ship';
 import Types from '../../models/Types';
-import { removeAsteroid } from '../../gui/objects/Asteroids';
+import { removeAsteroid } from './Asteroid';
 import { removeEnemy } from './Enemies';
 
 
@@ -147,7 +147,7 @@ export default (ctx: EngineContext) => {
         charge.timer -= step;
         if (charge.timer < 0) {
             ship.charge = null;
-            explosion(game.forceField, 1200, charge.pos.x, charge.pos.y, game.particles, 25);
+            explosion(game.forceField, 1200, charge.pos.x, charge.pos.y, game.particles, 0, 0, 220);
         }
         charge.pos.add(charge.vel);
         MapedgeShift(charge, WW, WH);
