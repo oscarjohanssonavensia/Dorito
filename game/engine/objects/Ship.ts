@@ -282,22 +282,24 @@ export default (ctx: EngineContext) => {
     ];
     ship.anomalyDetection = proximityDetection(ship, anomalies, SW * 0.4).vectors;
 
+    let closestItem = enemyDetection.closestItem;
+    if (!closestItem || enemyDetection.closestDistance > SH * 0.4) {
+        closestItem = asteroidDetection.closestItem;
+    }
+    ship.closestItem = closestItem;
 
+    ship.electroBastardRay = false;
     if (keyCodes.electroBastardRay) {
 
-        let itemBeingElectroed = enemyDetection.closestItem;
-        if (!itemBeingElectroed || enemyDetection.closestDistance > SH * 0.4) {
-            itemBeingElectroed = asteroidDetection.closestItem;
-        }
-        if (itemBeingElectroed && electroBastardRayCooldown > 0) {
+        if (closestItem && electroBastardRayCooldown > 0) {
             electroBastardRayCooldown--;
+            ship.electroBastardRay = true;
+            closestItem.life--;
 
-            itemBeingElectroed.life--;
-
-            if (itemBeingElectroed.life < 0) {
-                switch (itemBeingElectroed.type) {
+            if (closestItem.life < 0) {
+                switch (closestItem.type) {
                     case Types.TYPE_ASTEROID:
-                        removeAsteroid(itemBeingElectroed, ctx, ship);
+                        removeAsteroid(closestItem, ctx, ship);
                         break;
                     case Types.TYPE_ENEMY:
                         // removeEnemy() // already handled in Enemy.ts   which seems wrong...
@@ -308,19 +310,16 @@ export default (ctx: EngineContext) => {
 
             ship.life++;
             ship.shields++;
-            ship.electroBastardRay = itemBeingElectroed;
-        } else {
-            ship.electroBastardRay = null;
+
         }
 
     } else {
-        ship.electroBastardRay = null;
+
         if (electroBastardRayCooldown < ELECTROBASTARDRAY_LIMIT) {
             electroBastardRayCooldown++;
-
         }
     }
-
+    ship.electroBastardRayCoolDown = electroBastardRayCooldown;
 
     ship.damageTaken = false;
 }

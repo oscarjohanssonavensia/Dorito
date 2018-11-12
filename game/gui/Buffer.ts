@@ -147,7 +147,7 @@ export const lineVerticalRGBADash = (SW: number, fromX: number, fromY: number, t
     }
 }
 
-export const blockCircleRGBA = (sides: number, radius: number, posx: number, posy: number, angle: number, frame: Uint8ClampedArray, r: number, g: number, b: number, a: number, SW: number, SH: number = 0, SX: number = 0, SY: number = 0, thickness?: number) => {
+export const blockCircleRGBA = (sides: number, radius: number, posx: number, posy: number, angle: number, frame: Uint8ClampedArray, r: number, g: number, b: number, a: number, SW: number, SH: number = 0, SX: number = 0, SY: number = 0, thickness?: number, skipOdd?: boolean) => {
 
     let oldX;
     let oldY;
@@ -165,14 +165,16 @@ export const blockCircleRGBA = (sides: number, radius: number, posx: number, pos
         newY = (posy + Math.sin(doublePI * (j / sides) + angle) * radius) >> 0;
 
 
-
-        line2(SW, oldX - SX, oldY - SY, newX - SX, newY - SY, r, g, b, a, frame, thickness ? thickness : radius > 40 ? 6 : 2);
+        if (!skipOdd || j % 2 == 1) {
+            line2(SW, oldX - SX, oldY - SY, newX - SX, newY - SY, r, g, b, a, frame, thickness ? thickness : radius > 40 ? 6 : 2);
+        }
 
 
         oldX = newX;
         oldY = newY;
     }
 }
+
 
 export const onStage = (guiCtx: GuiContext, x: number, y: number, offset: number = 0): boolean => {
     const { SX, SY, SW, SH } = guiCtx;

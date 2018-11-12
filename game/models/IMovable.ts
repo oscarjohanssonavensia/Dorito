@@ -10,6 +10,7 @@ type Imovable = {
     markNewForColliders: boolean;
     guid: number;
     type: Types;
+    targetFlagged?: boolean;
 }
 
 export default Imovable;

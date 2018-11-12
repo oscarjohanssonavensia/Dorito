@@ -65,6 +65,7 @@ export const createAsteroid = (posx: number, posy: number, velx: number, vely: n
 
 export const createEnemies = () => {
     const enemy: Ship = {
+        electroBastardRayCoolDown: 0,
         type: Types.TYPE_ENEMY,
         guid: getGuid(),
         markNewForColliders: true,
@@ -171,6 +172,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
     game.enemies = [];
 
     game.player = {
+        electroBastardRayCoolDown: 0,
         type: Types.TYPE_SHIP,
         guid: getGuid(),
         markNewForColliders: true,
@@ -239,8 +241,6 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
                 break;
 
         }
-        console.log(key);
-
 
     }
 

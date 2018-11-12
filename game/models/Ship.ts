@@ -32,6 +32,7 @@ export type Ship = Imovable & {
     //optional
     charge?: Charge;
     chargeTimer: number;
-
-    electroBastardRay?: Imovable;
+    electroBastardRay?: boolean;
+    electroBastardRayCoolDown: number;
+    closestItem?: Imovable;
 }
