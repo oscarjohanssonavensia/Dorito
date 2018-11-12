@@ -7,6 +7,8 @@ type Keys = {
     down: boolean;
     fire: boolean;
     charge: boolean;
+    electroBastardRay: boolean;
+
 }
 
 export default Keys;

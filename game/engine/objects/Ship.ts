@@ -12,21 +12,40 @@ import Charge from '../../models/Charge';
 
 import Imovable from '../../models/IMovable';
 import { Ship, ProximityVectors } from '../../models/Ship';
+import Types from '../../models/Types';
+import { removeAsteroid } from '../../gui/objects/Asteroids';
+import { removeEnemy } from './Enemies';
 
 
-const proximityDetection = (ship: Imovable, list: Imovable[], maxDistance: number) => {
+type ProximityResult = {
+    vectors: ProximityVectors[],
+    closestItem: Imovable,
+    closestDistance: number,
+};
+
+const ELECTROBASTARDRAY_LIMIT = 200;
+let electroBastardRayCooldown = ELECTROBASTARDRAY_LIMIT;
+// TODO: use collisionGrid here
+const proximityDetection = (ship: Imovable, list: Imovable[], maxDistance: number): ProximityResult => {
 
     const multip = 0.03;
     const fromOrigin = ship.radius * 1.3;
     const maxLen = 45;
 
-    const result: ProximityVectors[] = [];
+    let closestDistance = Number.MAX_VALUE;
+    let closestItem: Imovable = null;
+
+    const vectors: ProximityVectors[] = [];
     const len = list.length;
     for (let e = 0; e < len; e++) {
         const item = list[e];
         const dist = distanceBetween(item, ship) - item.radius;
         if (dist < maxDistance) {
 
+            if (dist < closestDistance) {
+                closestDistance = dist;
+                closestItem = item;
+            }
             const angleRadians = Math.atan2(item.pos.y - ship.pos.y, item.pos.x - ship.pos.x);
 
             const v: Vector = new Vector(fromOrigin, fromOrigin);
@@ -37,10 +56,17 @@ const proximityDetection = (ship: Imovable, list: Imovable[], maxDistance: numbe
             //const v2: Vector = new Vector(Math.min(30 * distMultip, 30), Math.min(30 * distMultip, 30));
             v2.setAngle(angleRadians);
 
-            result.push({ from: v, to: v2 });
+            vectors.push({ from: v, to: v2 });
         }
     }
-    return result;
+
+    return {
+        closestDistance,
+        closestItem,
+        vectors,
+    }
+
+    // return result;
 }
 
 export default (ctx: EngineContext) => {
@@ -61,6 +87,7 @@ export default (ctx: EngineContext) => {
         ship.angle += 0.05;
     }
 
+
     if (keyCodes.up) {
 
 
@@ -74,7 +101,7 @@ export default (ctx: EngineContext) => {
             vel.mult(Math.random());
 
             const tp: Particle = {
-
+                type: Types.TYPE_PARTICLE,
                 guid: getGuid(),
                 markNewForColliders: true,
                 pos: new Vector(ship.pos.x + Math.cos(ship.angle) * -SHIP_LENGTH_RADIUS, ship.pos.y + Math.sin(ship.angle) * -SHIP_LENGTH_RADIUS),
@@ -102,6 +129,7 @@ export default (ctx: EngineContext) => {
             //vel.setAngle(ship.angle + Math.PI);
             const pos = new Vector(ship.pos.x + Math.cos(ship.angle + Math.PI) * SHIP_LENGTH_RADIUS, ship.pos.y + Math.sin(ship.angle + Math.PI) * SHIP_LENGTH_RADIUS);
             const charge: Charge = {
+                type: Types.TYPE_CHARGE,
                 guid: getGuid(),
                 markNewForColliders: true,
                 pos,
@@ -132,6 +160,7 @@ export default (ctx: EngineContext) => {
         vel.setAngle(ship.angle + (Math.random() - 0.5) * 0.02);
 
         const bullet: Particle = {
+            type: Types.TYPE_BULLET,
             guid: getGuid(),
             markNewForColliders: true,
             pos: new Vector(ship.pos.x + Math.cos(ship.angle) * SHIP_LENGTH_RADIUS, ship.pos.y + Math.sin(ship.angle) * SHIP_LENGTH_RADIUS),
@@ -224,14 +253,18 @@ export default (ctx: EngineContext) => {
 
 
     // Proximity detection
-    ship.enemyDetection = proximityDetection(ship, game.enemies, SW * 1.5);
-    ship.asterodDetection = proximityDetection(ship, game.asteroids, SW * 0.4);
+    const enemyDetection = proximityDetection(ship, game.enemies, SW * 1.5);
+    ship.enemyDetection = enemyDetection.vectors;
+
+    const asteroidDetection = proximityDetection(ship, game.asteroids, SW * 0.4);
+    ship.asterodDetection = asteroidDetection.vectors;
     const imovableBase = {
         vel: null,
         life: 0,
         radius: 0,
         markNewForColliders: true,
         guid: getGuid(),
+        type: Types.TYPE_MISC,
     };
     const anomalies: Imovable[] = [
         {
@@ -247,7 +280,46 @@ export default (ctx: EngineContext) => {
             ...imovableBase,
         }
     ];
-    ship.anomalyDetection = proximityDetection(ship, anomalies, SW * 0.4);
+    ship.anomalyDetection = proximityDetection(ship, anomalies, SW * 0.4).vectors;
+
+
+    if (keyCodes.electroBastardRay) {
+
+        let itemBeingElectroed = enemyDetection.closestItem;
+        if (!itemBeingElectroed || enemyDetection.closestDistance > SH * 0.4) {
+            itemBeingElectroed = asteroidDetection.closestItem;
+        }
+        if (itemBeingElectroed && electroBastardRayCooldown > 0) {
+            electroBastardRayCooldown--;
+
+            itemBeingElectroed.life--;
+
+            if (itemBeingElectroed.life < 0) {
+                switch (itemBeingElectroed.type) {
+                    case Types.TYPE_ASTEROID:
+                        removeAsteroid(itemBeingElectroed, ctx, ship);
+                        break;
+                    case Types.TYPE_ENEMY:
+                        // removeEnemy() // already handled in Enemy.ts   which seems wrong...
+
+                        break;
+                }
+            }
+
+            ship.life++;
+            ship.shields++;
+            ship.electroBastardRay = itemBeingElectroed;
+        } else {
+            ship.electroBastardRay = null;
+        }
+
+    } else {
+        ship.electroBastardRay = null;
+        if (electroBastardRayCooldown < ELECTROBASTARDRAY_LIMIT) {
+            electroBastardRayCooldown++;
+
+        }
+    }
 
 
     ship.damageTaken = false;

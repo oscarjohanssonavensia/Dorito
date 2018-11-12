@@ -1,5 +1,5 @@
 import { GuiContext } from "../Game";
-import { line2, blockCircleRGBA, onStage } from '../Buffer';
+import { line2, blockCircleRGBA, onStage, fillRGBA } from '../Buffer';
 import { ProximityVectors } from '../../models/Ship';
 import { Vector } from '../../engine/math/vector';
 
@@ -114,5 +114,58 @@ export default (guiContext: GuiContext) => {
             radiusMulip = Math.random() * 0.2 + 0.6;
         }
         blockCircleRGBA(8, player.radius * 4 * radiusMulip, player.pos.x, player.pos.y, -player.angle + shieldAngle, frame, 255, 0, 255, 255, SW, SH, SX, SY, 1);
+    }
+
+
+
+    // ELECTRO BASTARD RAY
+
+
+
+    if (player.electroBastardRay) {
+
+        const ebr = player.electroBastardRay;
+
+
+
+        const ebrX = ebr.pos.x;
+        const ebrY = ebr.pos.y;
+
+        const shipX = player.rotatedLayoutPositioned[0].x;
+        const shipY = player.rotatedLayoutPositioned[0].y;
+
+        const ebrListX: number[] = [shipX - SX];
+        const ebrListY: number[] = [shipY - SY];
+
+        const diffX = ebrX - shipX;
+        const diffY = ebrY - shipY;
+
+        const len = 10;
+
+        const partialX = diffX / len;
+        const partialY = diffY / len;
+
+
+        for (let i = 1; i < len - 1; i++) {
+            ebrListX.push((partialX * (i + 1) + ((Math.random() - 0.5) * partialY)) + shipX - SX);
+            ebrListY.push((partialY * (i + 1) + ((Math.random() - 0.5) * partialX)) + shipY - SY);
+        }
+
+
+        ebrListX.push(ebrX - SX);
+        ebrListY.push(ebrY - SY);
+
+
+        const ebrLen = ebrListX.length - 1;
+        for (let i = 0; i < ebrLen; i++) {
+            const fromX = ebrListX[i];
+            const toX = ebrListX[i + 1];
+            const fromY = ebrListY[i];
+            const toY = ebrListY[i + 1];
+
+
+            line2(SW, fromX, fromY, toX, toY, 0, 255, 255, 255, frame, 2);
+            line2(SW, fromX, fromY, toX, toY, 255, 255, 255, 255, frame, 1);
+        }
     }
 }

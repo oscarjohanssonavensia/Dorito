@@ -1,4 +1,5 @@
 import { Vector } from "../engine/math/vector";
+import Types from './Types';
 
 type Imovable = {
     pos: Vector;
@@ -8,6 +9,7 @@ type Imovable = {
     remove?: boolean;
     markNewForColliders: boolean;
     guid: number;
+    type: Types;
 }
 
 export default Imovable;

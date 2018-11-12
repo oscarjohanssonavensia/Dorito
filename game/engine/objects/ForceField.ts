@@ -5,6 +5,7 @@ import { Particle } from '../../models/Particle';
 import { Vector } from "../math/vector";
 import { CustomParticle } from "../../models/CustomParticle";
 import { getGuid } from '../math/Collision';
+import Types from '../../models/Types';
 
 export default (ctx: EngineContext) => {
     const { game, WW, WH, SH, SW, step } = ctx;
@@ -21,6 +22,7 @@ export default (ctx: EngineContext) => {
 
     for (let i = 0; i < 1; i++) {
         const p: CustomParticle = {
+            type: Types.TYPE_CUSTOM_PARTICLE,
             guid: getGuid(),
             markNewForColliders: true,
             life: Math.random() * 160,

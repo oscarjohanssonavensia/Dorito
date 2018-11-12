@@ -5,6 +5,7 @@ import ForceField from './objects/ForceField';
 import { FORCE_FIELD_RESOLUTION } from './Consts';
 import { CustomParticle } from '../models/CustomParticle';
 import { getGuid } from './math/Collision';
+import Types from '../models/Types';
 
 
 
@@ -92,6 +93,7 @@ export const explosion = (forceField: Vector[][], amount: number, x: number, y: 
 
     for (let i = 0; i < amount; i++) {
         const np: Particle = {
+            type: Types.TYPE_PARTICLE,
             guid: getGuid(),
             // vx: (Math.random() - 0.5) * 100,
             // vy: (Math.random() - 0.5) * 100,
@@ -110,6 +112,7 @@ export const explosion = (forceField: Vector[][], amount: number, x: number, y: 
     }
     for (let i = 0; i < amount; i++) {
         const np: Particle = {
+            type: Types.TYPE_PARTICLE,
             guid: getGuid(),
             /* vx: (Math.random() - 0.5) * 15,
              vy: (Math.random() - 0.5) * 15,
@@ -136,6 +139,7 @@ export const explosion = (forceField: Vector[][], amount: number, x: number, y: 
             for (let j = 0; j < lines.length; j += 2) {
                 for (let i = 0; i < 80; i++) {
                     const np: Particle = {
+                        type: Types.TYPE_PARTICLE,
                         guid: getGuid(),
                         radius: 1,
                         //vx: lines[j] + Math.random() * 0.1,
@@ -173,6 +177,7 @@ export const customExplosion = (amount: number, x: number, y: number, r: number,
 
     for (let i = 0; i < amount; i++) {
         const np: CustomParticle = {
+            type: Types.TYPE_CUSTOM_PARTICLE,
             guid: getGuid(),
             markNewForColliders: true,
             color: {
@@ -191,6 +196,7 @@ export const customExplosion = (amount: number, x: number, y: number, r: number,
     }
     for (let i = 0; i < amount; i++) {
         const np: CustomParticle = {
+            type: Types.TYPE_CUSTOM_PARTICLE,
             guid: getGuid(),
             markNewForColliders: true,
             color: {
@@ -216,6 +222,7 @@ export const customExplosion = (amount: number, x: number, y: number, r: number,
             for (let j = 0; j < lines.length; j += 2) {
                 for (let i = 0; i < 80; i++) {
                     const np: CustomParticle = {
+                        type: Types.TYPE_CUSTOM_PARTICLE,
                         guid: getGuid(),
                         markNewForColliders: true,
                         color: {

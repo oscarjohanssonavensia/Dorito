@@ -4,6 +4,7 @@ import Asteroid from "./models/Asteroid";
 import { ASTEROID_RADIUS_LIFE_MULTIP } from "./engine/Consts";
 import { createEnemies } from './init/initialization';
 import { getGuid } from './engine/math/Collision';
+import Types from './models/Types';
 
 export default class Startup {
 
@@ -17,6 +18,7 @@ export default class Startup {
             velocity.setAngle((Math.random() - 0.5) * (Math.PI * 2))
             const radius = Math.random() > 0.97 ? 400 : Math.random() * 50 + 50;
             const asteroid: Asteroid = {
+                type: Types.TYPE_ASTEROID,
                 guid: getGuid(),
                 markNewForColliders: true,
                 pos: new Vector(WW * Math.random(), WH * Math.random()),

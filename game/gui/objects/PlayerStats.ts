@@ -18,10 +18,14 @@ const numbers = (() => {
     return numbers;
 })();
 
-const STRING_SHIELDS = 'shields:';
-const STRING_SCORE = 'score:';
-const life_buffered_text = Text.create(STRING_SHIELDS, TEXT_SIZE, 'r');
-const score_buffered_text = Text.create(STRING_SCORE, TEXT_SIZE, 'r');
+
+const hull_buffered_text = Text.create('hull:', TEXT_SIZE, 'r');
+const score_buffered_text = Text.create('score:', TEXT_SIZE, 'r');
+const shield_buffered_text = Text.create('shield:', TEXT_SIZE, 'r');
+const enemies_buffered_text = Text.create('enemies:', TEXT_SIZE, 'r');
+
+
+
 
 const addNumberToTextBuffer = (num: number, buffer: TextBuffer[]) => {
     const numArr = (num + '').split('');
@@ -39,13 +43,22 @@ export default (guiContext: GuiContext) => {
 
     const score = player.score;
     const life = player.life;
-    const textBuffers = [life_buffered_text];
 
-
+    const textBuffers = [hull_buffered_text];
     addNumberToTextBuffer(life, textBuffers);
     textBuffers.push(numbers['|']);
+
     textBuffers.push(score_buffered_text);
     addNumberToTextBuffer(score, textBuffers);
+    textBuffers.push(numbers['|']);
+
+    textBuffers.push(shield_buffered_text);
+    addNumberToTextBuffer(player.shields, textBuffers);
+    textBuffers.push(numbers['|']);
+
+    textBuffers.push(enemies_buffered_text);
+    addNumberToTextBuffer(guiContext.game.enemies.length, textBuffers);
+
     const w = Text.measureBuffers(textBuffers);
 
     Text.addList(SW, frame, textBuffers, (SW * 0.5) - w * 0.5, 20, guiContext.game.player.damageTaken);

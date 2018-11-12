@@ -11,11 +11,7 @@ export type ProximityVectors = {
 
 export type Ship = Imovable & {
     shields: number;
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    s: number;
+
     angle: number;
     life: number;
     bullets: Particle[];
@@ -37,4 +33,5 @@ export type Ship = Imovable & {
     charge?: Charge;
     chargeTimer: number;
 
+    electroBastardRay?: Imovable;
 }

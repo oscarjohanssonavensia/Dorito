@@ -13,6 +13,7 @@ import { getGuid } from '../engine/math/Collision';
 import Text from "../gui/text/CreateText";
 import Clear from "../gui/objects/Clear";
 import { ClearHard } from '../gui/objects/Clear';
+import Types from '../models/Types';
 
 
 
@@ -22,6 +23,8 @@ const RIGHT = 39;
 const DOWN = 40;
 const FIRE = 32;
 const CHARGE = 17;
+const ELECTROBASTARDRAY = 90;
+
 
 const game: Game = new Game();
 
@@ -46,6 +49,7 @@ const __sh = SH;
 
 export const createAsteroid = (posx: number, posy: number, velx: number, vely: number, radius: number) => {
     const asteroid: Asteroid = {
+        type: Types.TYPE_ASTEROID,
         guid: getGuid(),
         markNewForColliders: true,
         pos: new Vector(posx, posy),
@@ -61,6 +65,7 @@ export const createAsteroid = (posx: number, posy: number, velx: number, vely: n
 
 export const createEnemies = () => {
     const enemy: Ship = {
+        type: Types.TYPE_ENEMY,
         guid: getGuid(),
         markNewForColliders: true,
         chargeTimer: 200,
@@ -74,13 +79,8 @@ export const createEnemies = () => {
         damageTaken: false,
         maxVel: 3,
         thrustParticles: [],
-        life: 5,
+        life: 75,
         radius: Math.max(SHIP_LENGTH_RADIUS, SHIP_WIDTH_RADIUS),
-        s: 1,
-        vx: 0.1,
-        vy: 0.1,
-        x: WW * Math.random(),
-        y: WH * Math.random(),
         angle: 0,
         pos: new Vector(WW * Math.random(), WH * Math.random()),
         thrust: new Vector(0.0001, 0.0001),
@@ -150,6 +150,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
         down: false,
         fire: false,
         charge: false,
+        electroBastardRay: false,
     };
 
     const fx = WW * FORCE_FIELD_RESOLUTION;
@@ -170,6 +171,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
     game.enemies = [];
 
     game.player = {
+        type: Types.TYPE_SHIP,
         guid: getGuid(),
         markNewForColliders: true,
         chargeTimer: 200,
@@ -184,11 +186,7 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
         thrustParticles: [],
         life: 100,
         radius: Math.max(SHIP_LENGTH_RADIUS, SHIP_WIDTH_RADIUS),
-        s: 1,
-        vx: 0.1,
-        vy: 0.1,
-        x: SW * 0.5,
-        y: SH * 0.5,
+
         damageTaken: false,
         angle: 0,
         pos: new Vector(SW * 0.9, SH * 0.9),
@@ -233,11 +231,15 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
             case CHARGE:
                 keyCodes.charge = down;
                 break;
+            case ELECTROBASTARDRAY:
+                keyCodes.electroBastardRay = down;
+                break;
             default:
 
                 break;
 
         }
+        console.log(key);
 
 
     }
@@ -297,6 +299,8 @@ export default (SW: number = __sw, SH: number = __sh, WW: number = __ww, WH: num
                     }
                     const loadingBuffer = Text.create(str, 100, 'r');
                     Text.add(SW, imgData.data, loadingBuffer, 200, 200);
+
+                    Text.add(SW, imgData.data, Text.create('KEYS: arrow left|up|right FIRE:space ElectroBastardRay:Z', 30, 'r'), 200, 330);
                     ctx.putImageData(imgData, 0, 0);
                 }, 0)
             }, 0)

@@ -1,4 +1,4 @@
-import { EngineContext } from "../Game";
+import { EngineContext } from '../Game';
 import { shift as MapedgeShift, shift } from '../math/Mapedge';
 import { Vector } from '../math/vector';
 import { Particle } from "../../models/Particle";
@@ -7,6 +7,24 @@ import { coarse, fine, getGuid } from '../math/Collision';
 import { explosion } from '../Create';
 import Force from "../math/Force";
 import { wormhole } from '../math/Force';
+import Types from '../../models/Types';
+import { Ship } from '../../models/Ship';
+
+export const removeEnemy = (enemyShip: Ship, ctx: EngineContext, removedByShip?: Ship) => {
+    enemyShip.remove = true;
+    explosion(ctx.game.forceField, 800, enemyShip.pos.x, enemyShip.pos.y, ctx.game.particles);
+
+    // must remove bullets on enemy, or they will linger in collision grid forever...
+    // TODO: move enemy bullets to root container on game
+
+    const bullets = enemyShip.bullets;
+    const numBullets = bullets.length;
+    for (let b = 0; b < numBullets; b++) {
+        const bullet = bullets[b];
+        bullet.remove = true;
+    }
+    enemyShip.bullets = []; // release references
+}
 
 export default (ctx: EngineContext) => {
     const { game, SX, SY, SW, SH, WW, WH } = ctx;
@@ -92,6 +110,7 @@ export default (ctx: EngineContext) => {
                 vel.setAngle(enemyShip.angle + (Math.random() - 0.5) * 0.02);
 
                 const bullet: Particle = {
+                    type: Types.TYPE_ENEMY_BULLET,
                     guid: getGuid(),
                     markNewForColliders: true,
                     pos: new Vector(enemyShip.pos.x + Math.cos(enemyShip.angle) * SHIP_LENGTH_RADIUS, enemyShip.pos.y + Math.sin(enemyShip.angle) * SHIP_LENGTH_RADIUS),
@@ -109,26 +128,8 @@ export default (ctx: EngineContext) => {
             enemies.splice(e, 1);
             len--;
             e--;
-            enemyShip.remove = true;
-            explosion(game.forceField, 800, enemyShip.pos.x, enemyShip.pos.y, ctx.game.particles);
-
-            // must remove bullets on enemy, or they will linger in collision grid forever...
-            // TODO: move enemy bullets to root container on game
-
-            const bullets = enemyShip.bullets;
-            const numBullets = bullets.length;
-            for (let b = 0; b < numBullets; b++) {
-                const bullet = bullets[b];
-                bullet.remove = true;
-            }
-            enemyShip.bullets = []; // release references
-
+            removeEnemy(enemyShip, ctx);
         }
-
-
-
-
-
 
     }
 

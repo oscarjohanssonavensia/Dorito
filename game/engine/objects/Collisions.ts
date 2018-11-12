@@ -12,6 +12,7 @@ import playerToEnemyBulletHandler from "./collision/handlers/playerToEnemyBullet
 import playerWithShieldToEnemyBulletHandler from "./collision/handlers/playerWithShieldToEnemyBulletHandler";
 import playerWithShieldToEnemyHandler from "./collision/handlers/playerWithShieldToEnemyHandler";
 import playerWithShieldToAsteroidHandler from "./collision/handlers/PlayerWithShieldToAsteroid";
+import Types from '../../models/Types';
 
 
 let updatedAsteroidsList: Asteroid[] = [];
@@ -39,6 +40,7 @@ const asteroidToBulletHandler: CollisionHandler = (asteroid: Imovable, bullet: I
                     const vel = new Vector(Math.random() * 5, Math.random() * 5)
                     vel.setLength(Math.random() * 2);
                     const smallAsteroid: Asteroid = {
+                        type: Types.TYPE_ASTEROID,
                         guid: getGuid(),
                         markNewForColliders: true,
                         pos: new Vector(asteroid.pos.x + (Math.random() - 0.5) * asteroid.radius, asteroid.pos.y + (Math.random() - 0.5) * asteroid.radius),
